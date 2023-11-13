@@ -10,4 +10,3 @@
 • This project was created with Vite and used some react hooks in addition to local storage.   
 • Also was used CSS and HTML concepts.
 
-

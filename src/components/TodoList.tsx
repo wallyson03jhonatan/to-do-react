@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import '../assets/TodoList.css';
 import Icone from '../assets/todoImage.png'
 

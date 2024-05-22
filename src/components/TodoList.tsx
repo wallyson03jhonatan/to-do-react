@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import '../assets/TodoList.css';
 import Icone from '../assets/todoImage.png'
+import '../assets/TodoList.css';
 
 interface TodoItem {
     text: string;
@@ -9,12 +9,12 @@ interface TodoItem {
 
 function TodoList() {
     const storageList = localStorage.getItem('list');
-    const [list, setList] = useState<TodoItem[]>(storageList ? JSON.parse(storageList) : []);
     const [newItem, setNewItem] = useState<string>('');
+    const [list, setList] = useState<TodoItem[]>(storageList ? JSON.parse(storageList) : []);
     
     useEffect( () => {
         localStorage.setItem('list', JSON.stringify(list));
-    }, [list])
+    }, [list]);
 
     function handleAdd(form: any) {        
         form.preventDefault();
@@ -55,7 +55,7 @@ function TodoList() {
                     type="text" 
                     placeholder="Adicione uma tarefa" 
                     value={newItem}
-                    onChange={ (event) => {
+                    onChange={(event) => {
                         setNewItem(event.target.value)
                     }}
                 />

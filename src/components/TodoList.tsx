@@ -1,93 +1,92 @@
-import React, { useState, useEffect } from "react";
 import Icone from '../assets/todoImage.png'
-import '../assets/TodoList.css';
+import TodoForm from './TodoForm'
+import TodoItem from './TodoItem'
+import { FormEvent, useEffect, useState } from 'react'
 
-interface TodoItem {
-    text: string;
-    isCompleted: boolean;
+interface ItemListInterface {
+  text: string
+  isCompleted: boolean
 }
 
-function TodoList() {
-    const storageList = localStorage.getItem('list');
-    const [newItem, setNewItem] = useState<string>('');
-    const [list, setList] = useState<TodoItem[]>(storageList ? JSON.parse(storageList) : []);
-    
-    useEffect( () => {
-        localStorage.setItem('list', JSON.stringify(list));
-    }, [list]);
+export default function TodoList() {
+  const storageList = localStorage.getItem('list')
+  const [newItem, setNewItem] = useState<string>('')
+  const [list, setList] = useState<ItemListInterface[]>(
+    storageList ? JSON.parse(storageList) : []
+  )
 
-    function handleAdd(form: any) {        
-        form.preventDefault();
-            
-        if (!newItem) return; 
-        
-        setList([...list, {text: newItem, isCompleted: false}]);
-        setNewItem('');
-        
-        document.getElementById('input-field')?.focus();
-    }
+  useEffect(() => {
+    localStorage.setItem('list', JSON.stringify(list))
+  }, [list])
 
-    function handleComplete(index:number) {
-        const listAux = [...list];
-        listAux[index].isCompleted = !listAux[index].isCompleted;
-        
-        return setList(listAux);
-    }
+  function handleAdd(event: FormEvent) {
+    event.preventDefault()
 
-    function handleDelete(index:number) {
-        const listAux = [...list];
-        listAux.splice(index,1);
+    if (!newItem) return
+    setList([...list, { text: newItem, isCompleted: false }])
+    setNewItem('')
 
-        return setList(listAux);
-    }
+    document.getElementById('input-field')?.focus()
+  }
 
-    function handleDeleteAll() {
-        return setList([]);
-    }
+  function handleComplete(index: number) {
+    const listAux = [...list]
+    listAux[index].isCompleted = !listAux[index].isCompleted
 
-    return (
-        <div>
-            <h1>Lista de Tarefas</h1>
+    return setList(listAux)
+  }
 
-            <form onSubmit={handleAdd}>
-                <input 
-                    id="input-field"
-                    type="text" 
-                    placeholder="Adicione uma tarefa" 
-                    value={newItem}
-                    onChange={(event) => {
-                        setNewItem(event.target.value)
-                    }}
-                />
-                <button type="submit" className="lnr lnr-plus-circle add" title="Adicionar tarefa"></button>    
-            </form>
+  function handleDelete(index: number) {
+    const listAux = [...list]
+    listAux.splice(index, 1)
 
-            <div className="todoList">
-                <div>
-                    {
-                        list.length < 1 
-                            ? 
-                                <img className="img__icon" src={Icone} alt="Imagem sobre lista de tarefas" /> 
-                            : 
-                                list.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className={item.isCompleted ? "item item__complete" : "item"}
-                                    >
-                                        <span onClick={() => {handleComplete(index)}}>{item.text}</span>
-                                        <button className="lnr lnr-trash remove" onClick={() => {handleDelete(index)}} title="Remover tarefa"></button>
-                                    </div>
-                                ))         
-                    }     
-                    {
-                        list.length > 0 &&
-                        <button className="remove remove__all"  onClick={() => {handleDeleteAll()}} title="Remover todas as tarefas">Remover todos</button>
-                    }
+    return setList(listAux)
+  }
 
-                </div>
-            </div>
-        </div>
-    );
+  function handleDeleteAll() {
+    return setList([])
+  }
+
+  return (
+    <div>
+      <h1>Lista de Tarefas</h1>
+
+      <TodoForm
+        setHandleAdd={handleAdd}
+        newItem={newItem}
+        setNewItem={setNewItem}
+      />
+
+      <div className="js-control todoList">
+        {list.length < 1 ? (
+          <div>
+            <img
+              className="img__icon"
+              src={Icone}
+              alt="Imagem sobre lista de tarefas"
+            />
+          </div>
+        ) : (
+          <>
+            {list.map((item, index) => (
+              <TodoItem
+                key={index}
+                index={index}
+                item={item}
+                setHandleComplete={handleComplete}
+                setHandleDelete={handleDelete}
+              />
+            ))}
+            <button
+              className="remove remove__all"
+              onClick={handleDeleteAll}
+              title="Remover todas as tarefas"
+            >
+              Remover todos
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
 }
-
-export default TodoList

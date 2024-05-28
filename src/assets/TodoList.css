@@ -115,6 +115,7 @@ button.add:hover {
 
 img.img__icon {
     max-height: 400px;
+    max-width: 400px;
 }
 
 button.remove {
